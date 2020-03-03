@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 function User(props) {
   const { user, handleRemove, handleToggle } = props;
@@ -30,9 +30,9 @@ function User(props) {
   //   }, [user]);
 
   // 랜더링 될때마다 실행됨
-  useEffect(() => {
-    console.log(user);
-  });
+  // useEffect(() => {
+  //   console.log(user);
+  // });
 
   return (
     <React.Fragment>

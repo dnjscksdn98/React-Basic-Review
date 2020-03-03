@@ -1,85 +1,66 @@
-import React, { useState, useRef } from "react";
+import React, { useReducer, useCallback, useRef } from "react";
 
-import Counter from "./components/Counter";
 import UserList from "./components/UserList";
 import CreateUser from "./components/CreateUser";
 import CountActiveUsers from "./components/CountActiveUsers";
 
+import reducer from "./store/reducers/users";
+import { change, create, toggle, remove } from "./store/actions/users";
+
+const initialState = {
+  inputs: {
+    username: "",
+    email: ""
+  },
+  users: [
+    {
+      id: 1,
+      username: "alex",
+      email: "alex@gmail.com",
+      active: false
+    },
+    {
+      id: 2,
+      username: "park",
+      email: "park@gmail.com",
+      active: false
+    },
+    {
+      id: 3,
+      username: "kim",
+      email: "kim@gmail.com",
+      active: false
+    }
+  ]
+};
+
 function App() {
-  // const [inputs, setInputs] = useState({
-  //   username: "",
-  //   email: ""
-  // });
-  // const { username, email } = inputs;
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const { users } = state;
+  const { username, email } = state.inputs;
+  const nextId = useRef(4);
 
-  // const [users, setUsers] = useState([
-  //   {
-  //     id: 1,
-  //     username: "alex",
-  //     email: "alex@gmail.com",
-  //     active: false
-  //   },
-  //   {
-  //     id: 2,
-  //     username: "park",
-  //     email: "park@gmail.com",
-  //     active: false
-  //   },
-  //   {
-  //     id: 3,
-  //     username: "kim",
-  //     email: "kim@gmail.com",
-  //     active: false
-  //   }
-  // ]);
+  const handleChange = useCallback(event => {
+    const { name, value } = event.target;
+    dispatch(change(name, value));
+  }, []);
 
-  // // useRef로 컴포넌트 안에 변수 만들기
-  // // 컴포넌트가 리랜더링 되도 값이 변하지 않음
-  // // nextId.current == 4
-  // const nextId = useRef(4);
+  const handleCreate = useCallback(() => {
+    dispatch(create(nextId, username, email));
+    nextId.current += 1;
+  }, [username, email]);
 
-  // const handleCreate = () => {
-  //   const newUser = {
-  //     id: nextId.current,
-  //     username,
-  //     email
-  //   };
-  //   // 배열에서의 항목 추가(spread)
-  //   setUsers([...users, newUser]);
+  const handleToggle = useCallback(id => {
+    dispatch(toggle(id));
+  }, []);
 
-  //   // // 배열에서의 항목 추가(concat)
-  //   // setUsers(users.concat(newUser));
-
-  //   setInputs({
-  //     username: "",
-  //     email: ""
-  //   });
-  //   nextId.current += 1;
-  // };
-
-  // const handleChange = event => {
-  //   const { name, value } = event.target;
-  //   setInputs({
-  //     ...inputs,
-  //     [name]: value
-  //   });
-  // };
-
-  // const handleRemove = id => {
-  //   setUsers(users.filter(user => user.id !== id));
-  // };
-
-  // const handleToggle = id => {
-  //   setUsers(
-  //     users.map(user =>
-  //       user.id === id ? { ...user, active: !user.active } : user
-  //     )
-  //   );
-  // };
+  const handleRemove = useCallback(id => {
+    dispatch(remove(id));
+  }, []);
 
   return (
     <React.Fragment>
-      {/* <CreateUser
+      <CreateUser
         username={username}
         email={email}
         handleChange={handleChange}
@@ -88,10 +69,9 @@ function App() {
       <CountActiveUsers users={users} />
       <UserList
         users={users}
-        handleRemove={handleRemove}
         handleToggle={handleToggle}
-      /> */}
-      <Counter />
+        handleRemove={handleRemove}
+      />
     </React.Fragment>
   );
 }
