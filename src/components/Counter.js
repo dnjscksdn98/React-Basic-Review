@@ -1,29 +1,24 @@
-import React, { useReducer, useState } from "react";
+import React from "react";
 
-import reducer from "../store/reducers/counter";
-import { increase, decrease } from "../store/actions/counter";
+// Presentational Component : UI 담당, 필요한 값이나 함수는 props로 전달받는다.
 
-function Counter() {
-  // const [number, setNumber] = useState(0);
+function Counter(props) {
+  const { number, diff, handleIncrease, handleDecrease, handleSetDiff } = props;
 
-  // useReducer(사용할 리듀서, 초기값)
-  const [number, dispatch] = useReducer(reducer, 0);
-
-  const handleIncrease = () => {
-    // setNumber(prevNumber => prevNumber + 1);
-    dispatch(increase());
-  };
-
-  const handleDecrease = () => {
-    // setNumber(prevNumber => prevNumber - 1);
-    dispatch(decrease());
+  const handleChange = event => {
+    // input은 기본적으로 문자열이므로 숫자로 변환
+    handleSetDiff(parseInt(event.target.value, 10));
   };
 
   return (
     <React.Fragment>
       <h1>{number}</h1>
-      <button onClick={handleIncrease}>+</button>
-      <button onClick={handleDecrease}>-</button>
+
+      <div>
+        <input type="number" value={diff} onChange={handleChange} />
+        <button onClick={handleIncrease}>+</button>
+        <button onClick={handleDecrease}>-</button>
+      </div>
     </React.Fragment>
   );
 }
