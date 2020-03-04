@@ -1,5 +1,5 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 
 import Counter from "../components/Counter";
 import { increase, decrease, setDiff } from "../modules/counter";
@@ -8,10 +8,13 @@ import { increase, decrease, setDiff } from "../modules/counter";
 
 function CounterContainer() {
   // store 안에서의 리듀서의 상태 조회
-  const { number, diff } = useSelector(state => ({
-    number: state.counter.number,
-    diff: state.counter.diff
-  }));
+  const { number, diff } = useSelector(
+    state => ({
+      number: state.counter.number,
+      diff: state.counter.diff
+    }),
+    shallowEqual
+  );
 
   // dispatch 함수를 사용할 수 있게 함
   const dispatch = useDispatch();
